@@ -40,7 +40,7 @@ func InitPostgresDB() {
 		dbName,
 		password,
 	)
-
+	fmt.Println(dsn)
 	db, err = gorm.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal(err)
@@ -82,4 +82,13 @@ func UpdateMovie(movie *Movie) (*Movie, error) {
 		return &movieToUpdate, errors.New("movie not updated")
 	}
 	return movie, nil
+}
+
+func DeleteMovie(id string) error {
+	var deletedMovie Movie
+	result := db.Where("id = ?", id).Delete(&deletedMovie)
+	if result.RowsAffected == 0 {
+		return errors.New("movie not deleted")
+	}
+	return nil
 }
